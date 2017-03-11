@@ -384,6 +384,40 @@ void fromMsg(const geometry_msgs::QuaternionStamped& in, tf2::Stamped<tf2::Quate
 }
 
 
+/***************/
+/** Transform **/
+/***************/
+
+/** \brief Convert a tf2 Transform type to its equivalent geometry_msgs representation.
+ * This function is a specialization of the toMsg template defined in tf2/convert.h.
+ * \param in A tf2 Transform object.
+ * \return The Transform converted to a geometry_msgs message type.
+ */
+inline
+geometry_msgs::Transform toMsg(const tf2::Transform& in)
+{
+  geometry_msgs::Transform out;
+  out.translation.x = in.getOrigin().getX();
+  out.translation.y = in.getOrigin().getY();
+  out.translation.z = in.getOrigin().getZ();
+  out.rotation = toMsg(in.getRotation());
+  return out;
+}
+
+/** \brief Convert a Transform message to its equivalent tf2 representation.
+ * This function is a specialization of the toMsg template defined in tf2/convert.h.
+ * \param in A Transform message type.
+ * \param out The Transform converted to a tf2 type.
+ */
+inline
+void fromMsg(const geometry_msgs::Transform& in, tf2::Transform& out)
+{
+  out.setOrigin(tf2::Vector3(in.translation.x, in.translation.y, in.translation.z));
+  // w at the end in the constructor
+  out.setRotation(tf2::Quaternion(in.rotation.x, in.rotation.y, in.rotation.z, in.rotation.w));
+}
+
+
 /**********************/
 /** TransformStamped **/
 /**********************/
@@ -466,40 +500,6 @@ void fromMsg(const geometry_msgs::TransformStamped& in, tf2::Stamped <tf2::Trans
   tf2::Transform tmp;
   fromMsg(in.transform, tmp);
   out.setData(tmp);
-}
-
-
-/***************/
-/** Transform **/
-/***************/
-
-/** \brief Convert a tf2 Transform type to its equivalent geometry_msgs representation.
- * This function is a specialization of the toMsg template defined in tf2/convert.h.
- * \param in A tf2 Transform object.
- * \return The Transform converted to a geometry_msgs message type.
- */
-inline
-geometry_msgs::Transform toMsg(const tf2::Transform& in)
-{
-  geometry_msgs::Transform out;
-  out.translation.x = in.getOrigin().getX();
-  out.translation.y = in.getOrigin().getY();
-  out.translation.z = in.getOrigin().getZ();
-  out.rotation = toMsg(in.getRotation());
-  return out;
-}
-
-/** \brief Convert a Transform message to its equivalent tf2 representation.
- * This function is a specialization of the toMsg template defined in tf2/convert.h.
- * \param in A Transform message type.
- * \param out The Transform converted to a tf2 type.
- */
-inline
-void fromMsg(const geometry_msgs::Transform& in, tf2::Transform& out)
-{
-  out.setOrigin(tf2::Vector3(in.translation.x, in.translation.y, in.translation.z));
-  // w at the end in the constructor
-  out.setRotation(tf2::Quaternion(in.rotation.x, in.rotation.y, in.rotation.z, in.rotation.w));
 }
 
 
