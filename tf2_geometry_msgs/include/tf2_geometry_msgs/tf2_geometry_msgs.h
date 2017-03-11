@@ -53,7 +53,7 @@ namespace tf2
 inline
 KDL::Frame gmTransformToKDL(const geometry_msgs::TransformStamped& t)
   {
-    return KDL::Frame(KDL::Rotation::Quaternion(t.transform.rotation.x, t.transform.rotation.y, 
+    return KDL::Frame(KDL::Rotation::Quaternion(t.transform.rotation.x, t.transform.rotation.y,
 						t.transform.rotation.z, t.transform.rotation.w),
 		      KDL::Vector(t.transform.translation.x, t.transform.translation.y, t.transform.translation.z));
   }
@@ -451,6 +451,21 @@ inline
 void fromMsg(const geometry_msgs::TransformStamped& msg, geometry_msgs::TransformStamped& out)
 {
   out = msg;
+}
+
+/** \brief Convert a TransformStamped message to its equivalent tf2 representation.
+ * This function is a specialization of the toMsg template defined in tf2/convert.h.
+ * \param msg A TransformStamped message type.
+ * \param out The TransformStamped converted to the equivalent tf2 type.
+ */
+inline
+void fromMsg(const geometry_msgs::TransformStamped& in, tf2::Stamped <tf2::Transform>& out)
+{
+  out.stamp_ = in.header.stamp;
+  out.frame_id_ = in.header.frame_id;
+  tf2::Transform tmp;
+  fromMsg(in.transform, tmp);
+  out.setData(tmp);
 }
 
 
