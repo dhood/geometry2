@@ -40,7 +40,7 @@ using namespace tf2;
 
 std::string tf2::displayTimePoint(const TimePoint& stamp)
 {
-  const char * format_str = "%.6f";
+  const char * format_str = "%.26f";
   double current_time = timeToSec(stamp);
   int buff_size = snprintf(NULL, 0, format_str, current_time);
   if (buff_size < 0) {

@@ -178,6 +178,22 @@ TEST(tf2_time, To_From_Sec)
   EXPECT_EQ(tf2::timeFromSec(t1_sec), tf2::timeFromSec(t2_sec));
 }
 
+TEST(tf2_time, Negative_Durations)
+{
+  tf2::TimePoint t1 = tf2::get_now();
+  // Create a time in the future.
+  double diff_sec = 0.5;
+  tf2::TimePoint t2 = tf2::timeFromSec(tf2::timeToSec(t1) + diff_sec);
+
+  // Create a negative duration.
+  tf2::Duration diff = t1 - t2;
+  std::cout << "Difference (ns): " << diff.count() << std::endl;
+  std::cout << "Difference (s): " << tf2::durationToSec(diff) << std::endl;
+
+  double err = (-tf2::durationToSec(diff)) - diff_sec;
+  EXPECT_TRUE(std::abs(err) < 0.001);
+}
+
 
 int main(int argc, char **argv){
   testing::InitGoogleTest(&argc, argv);

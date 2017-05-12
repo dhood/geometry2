@@ -72,6 +72,7 @@ namespace tf2
 
   inline double durationToSec(const tf2::Duration& input){
     int64_t count = input.count();
+    std::cout << "Count (ns): " << count << std::endl; 
     int32_t sec;
     uint32_t nsec;
     nsec = count % 1000000000ul;
