@@ -181,23 +181,27 @@ TEST(tf2_time, To_From_Sec)
 TEST(tf2_time, Negative_Durations)
 {
   tf2::TimePoint t1 = tf2::get_now();
-  // Create a time in the future.
-  double diff_sec = 0.5;
-  tf2::TimePoint t2 = tf2::timeFromSec(tf2::timeToSec(t1) + diff_sec);
+  // Create a time in the past.
+  double expected_diff_sec = -0.7;
+  tf2::TimePoint t2 = tf2::timeFromSec(tf2::timeToSec(t1) + expected_diff_sec);
 
+  // Check durationToSec.
   // Create a negative duration.
-  tf2::Duration diff = t1 - t2;
-  std::cout << "Difference (ns): " << diff.count() << std::endl;
-  std::cout << "Difference (s): " << tf2::durationToSec(diff) << std::endl;
+  tf2::Duration duration = t2 - t1;
+  EXPECT_TRUE(duration.count() < 0);
+  std::cout << "Difference (ns): " << duration.count() << std::endl;
+  std::cout << "Difference (s): " << tf2::durationToSec(duration) << std::endl;
 
-  double err = (-tf2::durationToSec(diff)) - diff_sec;
-  EXPECT_TRUE(std::abs(err) < 0.001);
+  double error_sec = tf2::durationToSec(duration) - expected_diff_sec;
+  EXPECT_TRUE(std::abs(error_sec) < 0.001);
 
-  tf2::Duration diff2 = tf2::durationFromSec(tf2::durationToSec(diff));
-  tf2::Duration err2 = diff - diff2;
-  err2 = err2 > tf2::Duration(0) ? err2 : -err2;
-  std::cout << "Error (ns): " << err2.count() << std::endl;
-  EXPECT_TRUE(err2 < tf2::Duration(std::chrono::nanoseconds(200)));
+  // Check durationFromSec.
+  tf2::Duration duration2 = tf2::durationFromSec(tf2::durationToSec(duration));
+  tf2::Duration error_duration = duration - duration2;
+  // Get the absolute difference between Durations.
+  error_duration = error_duration > tf2::Duration(0) ? error_duration : -error_duration;
+  std::cout << "Error (ns): " << error_duration.count() << std::endl;
+  EXPECT_TRUE(error_duration < tf2::Duration(std::chrono::nanoseconds(1)));
 }
 
 

@@ -58,7 +58,7 @@ namespace tf2
   {
     int32_t sec, nsec;
     sec = (int32_t)floor(t_sec);
-    nsec = (int32_t)std::round((t_sec-sec) * 1e9);
+    nsec = (int32_t)std::nearbyint((t_sec-sec) * 1e9);
     // avoid rounding errors
     sec += (nsec / 1000000000l);
     nsec %= 1000000000l;
