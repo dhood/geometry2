@@ -192,6 +192,12 @@ TEST(tf2_time, Negative_Durations)
 
   double err = (-tf2::durationToSec(diff)) - diff_sec;
   EXPECT_TRUE(std::abs(err) < 0.001);
+
+  tf2::Duration diff2 = tf2::durationFromSec(tf2::durationToSec(diff));
+  tf2::Duration err2 = diff - diff2;
+  err2 = err2 > tf2::Duration(0) ? err2 : -err2;
+  std::cout << "Error (ns): " << err2.count() << std::endl;
+  EXPECT_TRUE(err2 < tf2::Duration(std::chrono::nanoseconds(200)));
 }
 
 

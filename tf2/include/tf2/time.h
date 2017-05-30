@@ -56,12 +56,12 @@ namespace tf2
 
   inline Duration durationFromSec(double t_sec)
   {
-    uint32_t sec, nsec;
-    sec = (uint32_t)floor(t_sec);
-    nsec = (uint32_t)std::round((t_sec-sec) * 1e9);
+    int32_t sec, nsec;
+    sec = (int32_t)floor(t_sec);
+    nsec = (int32_t)std::round((t_sec-sec) * 1e9);
     // avoid rounding errors
-    sec += (nsec / 1000000000ul);
-    nsec %= 1000000000ul;
+    sec += (nsec / 1000000000l);
+    nsec %= 1000000000l;
     return std::chrono::seconds(sec) + std::chrono::nanoseconds(nsec);
   }
 
@@ -72,11 +72,11 @@ namespace tf2
 
   inline double durationToSec(const tf2::Duration& input){
     int64_t count = input.count();
-    std::cout << "Count (ns): " << count << std::endl; 
+    std::cout << "Count (ns): " << count << std::endl;
     int32_t sec;
-    uint32_t nsec;
-    nsec = count % 1000000000ul;
-    sec = (count - nsec) / 1000000000ul;
+    int32_t nsec;
+    nsec = count % 1000000000l;
+    sec = (count - nsec) / 1000000000l;
     double nsec_double = 1e-9 * (double)nsec;
     double sec_double = (double)sec;
     fprintf(stdout, "sec_double: %0.16f\n", sec_double);
